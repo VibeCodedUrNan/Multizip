@@ -1,0 +1,18 @@
+# build output (publish programs as GitHub Releases, not in the repository)
+dist/
+build/
+Output/
+tools/
+*.spec
+build.log
+
+# Python
+__pycache__/
+*.py[cod]
+
+# editors and operating systems
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

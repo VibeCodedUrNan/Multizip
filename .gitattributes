@@ -1,0 +1,5 @@
+# Shell scripts must keep Unix line endings or bash refuses them; batch files want Windows ones.
+* text=auto
+*.sh text eol=lf
+*.bat text eol=crlf
+*.png binary
