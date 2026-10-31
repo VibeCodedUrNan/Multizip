@@ -19,7 +19,7 @@ zip, 7z, rar, tar and many more formats, plus a few disk tools.
 - **Right-click menu**: Extract Here, Extract to folder, Add to archive and more, in Explorer and in the main
   Linux file managers (Files, Dolphin, Thunar, Nemo, Caja).
 - **Tools**: disk usage analyser, clean-up assistant, download manager (pause, resume, several connections,
-  checksums), bootable USB maker (Windows).
+  checksums), bootable USB maker, download manager, data recovery and more 
 - Your Desktop as a home screen, drag and drop everywhere, themes and background pictures.
 
 ## Install
