@@ -84,3 +84,11 @@ app = m.Main()
 app.withdraw()
 check("Windows window class and icon unchanged", app.winfo_class() == "Tk" and not hasattr(app, "_icon"))
 app.destroy()
+
+# running from source: a py7zr older than 0.20.2 (known path-traversal bug) must not be used
+try:
+    import py7zr
+    ver = tuple(int(x) for x in re.findall(r"\d+", py7zr.__version__)[:3])
+    check("py7zr older than 0.20.2 is not used", (m.py7zr is None) == (ver < (0, 20, 2)), py7zr.__version__)
+except ImportError:
+    check("py7zr not installed: MultiZip runs without it", m.py7zr is None)

@@ -38,8 +38,19 @@ for fmt in ("7z", "zip", "tar.gz", "tar.zst"):
                                                sorted(os.path.relpath(os.path.join(r, f), dest)
                                                       for r, _, fs in os.walk(dest) for f in fs))[1])
 
-step("7z append (add_into)", lambda: (m.add_into(os.path.join(work, "t.7z"), [extra], "", None, noop, never),
-                                      sorted(e[0] for e in m.list_archive(os.path.join(work, "t.7z"))))[1])
+if m.py7zr:
+    step("7z append (add_into)", lambda: (m.add_into(os.path.join(work, "t.7z"), [extra], "", None, noop, never),
+                                          sorted(e[0] for e in m.list_archive(os.path.join(work, "t.7z"))))[1])
+else:                                               # no usable py7zr: a clear message, and the 7z left untouched
+    def refused():
+        before = open(os.path.join(work, "t.7z"), "rb").read()
+        try:
+            m.add_into(os.path.join(work, "t.7z"), [extra], "", None, noop, never)
+        except RuntimeError as e:
+            assert e.args[0] == m.NO_7Z_ADD and open(os.path.join(work, "t.7z"), "rb").read() == before
+            return "refused with a message"
+        raise AssertionError("added without py7zr")
+    step("7z append without py7zr", refused)
 
 # zip: adding a file that is already in the archive
 z = os.path.join(work, "t.zip")

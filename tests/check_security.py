@@ -2,6 +2,7 @@
 Classic attack: entry 1 is a link 'evil' -> <outside folder>; entry 2 is a file 'evil/pwned.txt'.
 Usage: symlink_attack.py <src>"""
 import io, os, shutil, sys, tarfile, tempfile, zipfile
+import py7zr                        # builds the test archives, whatever version MultiZip itself accepts
 
 sys.path.insert(0, sys.argv[1])
 import multizip as m
@@ -27,7 +28,7 @@ try:
         print(f"note: this Windows account cannot create symbolic links ({e.strerror}); "
               "the link step is then refused by Windows itself")
     print("python", sys.version.split()[0], "| tar data filter:", hasattr(tarfile, "data_filter"),
-          "| py7zr", m.py7zr.__version__, "| can create symlinks:", can_link)
+          "| py7zr", py7zr.__version__, "(used by MultiZip:", m.py7zr is not None, ")", "| can create symlinks:", can_link)
 
     # --- tar: symlink then a file through it (and an absolute-path link)
     t = os.path.join(work, "evil.tar")
@@ -74,7 +75,7 @@ try:
             with zipfile.ZipFile(a, "w") as zf:
                 zf.writestr("../../OUTSIDE/zipslip.txt", "pwned")
         else:
-            with m.py7zr.SevenZipFile(a, "w") as z:
+            with py7zr.SevenZipFile(a, "w") as z:
                 z.write(payload, "../../OUTSIDE/zipslip.txt")
         try:
             m.extract(a, os.path.join(work, "x_" + fmt, "deep"), None, None, noop, never, mark=False)
@@ -90,7 +91,7 @@ try:
         lnk = os.path.join(srcdir, "evil")
         os.symlink(outside, lnk, target_is_directory=True)
         a = os.path.join(work, "evil.7z")
-        with m.py7zr.SevenZipFile(a, "w") as z:
+        with py7zr.SevenZipFile(a, "w") as z:
             z.write(lnk, "evil")
             z.write(payload, "evil/pwned7.txt")
         for how in ("py7zr", "7-Zip engine"):

@@ -29,9 +29,9 @@ No install is needed. To add the right-click menu and file types, build the inst
 program is not code-signed, so Windows SmartScreen may say "Windows protected your PC": choose
 **More info > Run anyway**.
 
-**Linux:** download `MultiZip-linux-x86_64.tar.gz` from Releases, unpack it and run
-`bash MultiZip/install-linux.sh`. That installs it for your user only (no root), with an applications-menu
-entry, "Open with" for archives and right-click menus. Remove it with
+**Linux:** build it yourself with `bash build.sh` (below), then run `bash install-linux.sh`. That installs it
+for your user only (no root), with an applications-menu entry, "Open with" for archives and right-click menus.
+`build.sh` also makes `MultiZip-linux-<arch>.tar.gz`, which you can give to others. Remove it with
 `bash ~/.local/lib/multizip/install-linux.sh --uninstall`.
 
 **macOS:** build it yourself (below), then drag `MultiZip.app` into Applications. It is not signed by Apple:
@@ -58,6 +58,9 @@ installed (Windows: 7-Zip; Linux/macOS: the `7zz` program), it is bundled into t
 pip install pillow py7zr tkinterdnd2
 python multizip.py
 ```
+
+On Python 3.14 and newer, pip may only find a py7zr older than 0.20.2. MultiZip ignores that version
+because of its security bug, and opens 7z files with 7-Zip instead.
 
 ## Command line
 

@@ -50,6 +50,9 @@ from tkinter import colorchooser, filedialog, messagebox, simpledialog, ttk
 
 try:
     import py7zr
+    # before 0.20.2 py7zr can write outside the target folder: such a copy is ignored and 7-Zip handles 7z instead
+    if tuple(int(x) for x in re.findall(r"\d+", py7zr.__version__)[:3]) < (0, 20, 2):
+        py7zr = None
 except ImportError:
     py7zr = None
 try:
@@ -1120,10 +1123,16 @@ def recycle(paths):
         return False
 
 
+NO_7Z_ADD = ("Adding files into an existing .7z needs the py7zr library (version 0.20.2 or newer), which this "
+             "copy of MultiZip does not have.\nYou can still open and extract it, or extract it and make a new 7z.")
+
+
 def add_into(arc, paths, inner, pwd, tick, cancelled):
     """Append files/folders to an existing .zip, .7z or plain .tar."""
     k = kind(arc)
     if k == "7z":
+        if not py7zr:
+            raise RuntimeError(NO_7Z_ADD)
         with py7zr.SevenZipFile(arc, "a", password=pwd or None) as z:
             for p in paths:
                 if cancelled():
@@ -6361,7 +6370,7 @@ class Main(BaseTk):
                                      "(works for .zip, .7z and plain .tar).")
             return
         if k == "7z" and not py7zr:
-            messagebox.showinfo(APP, "7z needs:  pip install py7zr")
+            messagebox.showinfo(APP, NO_7Z_ADD)
             return
         if not messagebox.askyesno(APP, f"Add {len(paths)} item(s) to\n{self.arc} ?"):
             return
