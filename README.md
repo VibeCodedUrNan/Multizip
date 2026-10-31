@@ -2,7 +2,7 @@
 
 <img src="multizip.png" width="96" align="right" alt="MultiZip icon">
 
-A friendly archive manager for Windows, with Linux and macOS support. Open, create, extract and test
+A friendly and customizable archive manager for Windows, with Linux and macOS support. Open, create, extract and test
 zip, 7z, rar, tar and many more formats, plus a few disk tools.
 
 ## Features
